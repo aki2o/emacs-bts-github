@@ -1099,10 +1099,10 @@ In the text box,
 
 (defun bts-github::summary-face (ticket)
   (cond ((eq (plist-get ticket :state) 'closed)
-         'bts:ticket-summary-closed-ticket-face)
+         'bts:summary-closed-ticket-face)
         ((loop for lbl in (plist-get ticket :labels)
                if (member lbl bts-github:ignore-labels) return t)
-         'bts:ticket-summary-ignored-ticket-face)))
+         'bts:summary-ignored-ticket-face)))
 
 (defun bts-github::summary-label-sort (tic1 tic2)
   (string< (mapconcat 'identity (plist-get tic1 :labels) ",")

@@ -6,11 +6,11 @@ This is a extension of Emacs that is a plugin of ![bts.el](https://github.com/ak
 
 ### If use package.el
 
-2015/01/06 Now application
+2015/01/06 It's available by using melpa.
 
 ### If use el-get.el
 
-2015/01/06 Now application
+2015/01/06 It's available. But, master branch only.
 
 ### If use auto-install.el
 
