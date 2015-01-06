@@ -6,7 +6,7 @@
 ;; Keywords: convenience
 ;; URL: https://github.com/aki2o/emacs-bts-github
 ;; Version: 0.0.1
-;; Package-Requires: ((bts "0.0.1") (gh))
+;; Package-Requires: ((bts "0.0.1") (gh "0.8.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
