@@ -5,7 +5,7 @@
 ;; Author: Hiroaki Otsu <ootsuhiroaki@gmail.com>
 ;; Keywords: convenience
 ;; URL: https://github.com/aki2o/emacs-bts-github
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Package-Requires: ((bts "0.0.1") (gh "0.8.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -863,9 +863,7 @@ In the text box,
            (v (cond ((not (bts:complex-condition-p ccond))
                      ccond)
                     ((bts:complex-condition-and-p ccond)
-                     (mapconcat 'identity members ","))
-                    (t
-                     (nth 0 members))))
+                     (mapconcat 'identity members ","))))
            (ret (when (and v (not (string= v "")))
                   (list (cons 'labels v)))))
       (bts--debug "github made fetch issue label param : %s" ret)
