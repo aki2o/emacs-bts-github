@@ -5,7 +5,7 @@
 ;; Author: Hiroaki Otsu <ootsuhiroaki@gmail.com>
 ;; Keywords: convenience
 ;; URL: https://github.com/aki2o/emacs-bts-github
-;; Version: 0.0.2
+;; Version: 0.0.3
 ;; Package-Requires: ((bts "0.0.1") (gh "0.8.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -869,16 +869,10 @@ In the text box,
       (bts--debug "github made fetch issue label param : %s" ret)
       ret)))
 
-(defun bts-github::make-fetch-repo-issue-param (query account)
+(defun bts-github::make-fetch-repo-issue-param (query &rest params)
   (let ((ret (append (list (cons 'state (plist-get query :state)))
                      (bts-github::make-fetch-issue-label-param query)
-                     (when (eq (plist-get query :relate-type) 'limit)
-                       (loop with relates = (plist-get query :relates)
-                             for (confignm . paramnm) in '((assigned . assignee)
-                                                           (created . creator)
-                                                           (mentioned . mentioned))
-                             if (memq confignm relates)
-                             collect (cons paramnm account))))))
+                     params)))
     (bts--debug "github made fetch repo issue param : %s" ret)
     ret))
 
@@ -892,12 +886,22 @@ In the text box,
 (defun* bts-github::fetch-repo-issue (&key account token query owner repo)
   (bts--debug "github start fetch repo issue. account[%s] owner[%s] repo[%s]"
               account owner repo)
-  (bts-github::fetch-any-response
-   :target 'issue
-   :account account
-   :token token
-   :query (format "/repos/%s/%s/issues" owner repo)
-   :params (bts-github::make-fetch-repo-issue-param query account)))
+  (loop with resource = (format "/repos/%s/%s/issues" owner repo)
+        for relate in (if (eq (plist-get query :relate-type) 'unlimit)
+                          '(all)
+                        (plist-get query :relates))
+        for relate-param = (case relate
+                             (assigned  (cons 'assignee account))
+                             (created   (cons 'creator account))
+                             (mentioned (cons 'mentioned account)))
+        if (or (eq relate 'all)
+               relate-param)
+        append (bts-github::fetch-any-response
+                :target 'issue
+                :account account
+                :token token
+                :query resource
+                :params (bts-github::make-fetch-repo-issue-param query relate-param))))
 
 (defun* bts-github::fetch-any-issue (&key account token query organization all)
   (bts--debug "github start fetch any issue. account[%s] organization[%s] all[%s]"
