@@ -5,7 +5,7 @@
 ;; Author: Hiroaki Otsu <ootsuhiroaki@gmail.com>
 ;; Keywords: convenience
 ;; URL: https://github.com/aki2o/emacs-bts-github
-;; Version: 0.0.3
+;; Version: 0.0.5
 ;; Package-Requires: ((bts "0.0.1") (gh "0.8.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -1090,7 +1090,9 @@ In the text box,
           (setq issue (bts-github::update-issue ticket diff :account account :token token))
           (bts-github::update-comment ticket diff :account account :token token)
           (bts-github::add-comment ticket :account account :token token))
-        (nth 0 (bts-github::make-tickets (list issue)))))
+        ;; issue returned from gh.el has trouble. It's not updated the labels to latest.
+        ;; (nth 0 (bts-github::make-tickets (list issue)))))
+        t))
     (yaxception:catch 'error e
       (bts--error "github failed regist issue : %s" (yaxception:get-text e))
       (yaxception:throw e))))
