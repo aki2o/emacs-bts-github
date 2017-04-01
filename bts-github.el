@@ -3,7 +3,7 @@
 ;; Copyright (C) 2015  Hiroaki Otsu
 
 ;; Author: Hiroaki Otsu <ootsuhiroaki@gmail.com>
-;; Keywords: convenience
+;; Keywords: convenience, git, github
 ;; URL: https://github.com/aki2o/emacs-bts-github
 ;; Version: 0.0.5
 ;; Package-Requires: ((bts "0.0.1") (gh "0.8.2"))
@@ -298,7 +298,12 @@
     (if (symbolp lbls)
         lbls
       (loop for lbl in lbls
-            collect (oref lbl :name)))))
+            if (eieio-object-p lbl)
+            collect (oref lbl :name)
+            else
+            do (progn
+                 (bts--error "github found not eieio in fetched label : %s" lbl)
+                 (yaxception:throw 'bts:invalid-argument))))))
 
 
 (defvar bts-github::cache-assignee (make-hash-table :test 'equal))
@@ -323,7 +328,12 @@
     (if (symbolp users)
         users
       (loop for user in users
-            collect (oref user :login)))))
+            if (eieio-object-p user)
+            collect (oref user :login)
+            else
+            do (progn
+                 (bts--error "github found not eieio in fetched assignee : %s" user)
+                 (yaxception:throw 'bts:invalid-argument))))))
 
 
 (defvar bts-github::cache-comment (make-hash-table :test 'equal))
